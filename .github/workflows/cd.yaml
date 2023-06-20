@@ -1,0 +1,39 @@
+name: Build & deploy
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  cd:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2.2.0
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4.6.0
+        with:
+          images: eucleciojosias/fsl-devops-challenge
+
+      - name: Create image tag
+        run: |
+          echo IMAGE_TAG="version-${GITHUB_SHA:0:9}" >> $GITHUB_ENV
+          echo "version-${GITHUB_SHA:0:9}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4.1.1
+        with:
+          context: codebase/rdicidr-0.1.0
+          file: ./codebase/rdicidr-0.1.0/Dockerfile
+          push: true
+          tags: eucleciojosias/fsl-devops-challenge:${{ env.IMAGE_TAG }}
