@@ -16,16 +16,16 @@ jobs:
           node-version: '15'
 
       - name: Install dependencies npm install
-        run: npm ci
+        run: npm ci --prefix codebase/rdicidr-0.1.0
 
       - name: Linter (ESLint) npm run lint
-        run: npm run lint
+        run: npm run lint --prefix codebase/rdicidr-0.1.0
 
       - name: Formatter (Prettier) npm run prettier
-        run: npm run prettier
+        run: npm run prettier --prefix codebase/rdicidr-0.1.0
 
       - name: Test (Jest) CI=true npm run test
-        run: npm run test
+        run: npm run test --prefix codebase/rdicidr-0.1.0
 
       - name: Build npm run build
-        run: npm run build
+        run: npm run build --prefix codebase/rdicidr-0.1.0
